@@ -10,7 +10,7 @@ RUN apk add --no-cache \
 # Download and setup the miner
 WORKDIR /miner
 RUN curl -L -o miner.tar.gz https://github.com/mintme-com/miner/releases/download/v2.8.0/webchain-miner-2.8.0-linux-amd64.tar.gz \
-    && unzip miner.tar.gz \
+    && tar -xvf miner.tar.gz \
     && rm miner.tar.gz
 
 # Miner configuration (replace 'example-miner' with actual miner binary)
