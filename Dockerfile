@@ -23,7 +23,9 @@ FROM alpine:latest as alpine-jupyter
 # Install dependencies for Python and Jupyter
 RUN apk add --no-cache \
     python3 \
-    py3-pip 
+    py3-pip \
+    python3-dev \
+    && pip3 install jupyterlab notebook
 
 RUN apk add --no-cache python3-jupyterlab python3-notebook
     
