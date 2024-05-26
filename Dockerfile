@@ -3,10 +3,9 @@ FROM ubuntu:20.04 as alpine-mine
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies for the miner
-RUN apk add --no-cache \
-    curl \
-    unzip \
-    tar
+RUN apt update
+
+RUN apt install wget tar curl 
 
 # Download and setup the miner
 WORKDIR /miner
