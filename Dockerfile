@@ -42,7 +42,6 @@ FROM debian:latest
 COPY --from=builder / /
 
 # Expose the port for Jupyter Notebook
-EXPOSE 8888
 
 # Specify the user for running Jupyter Notebook
 USER ${NB_USER}
