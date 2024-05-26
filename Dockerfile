@@ -20,7 +20,7 @@ ENTRYPOINT ["./webchain-miner", "-o", "mintme.wattpool.net:2222", "-u", "0x69651
 FROM ubuntu:20.04 as ubuntu-jupyter
 
 # Install dependencies for Python and Jupyter
-RUN apt update && apt install python3 python3-pip python3-dev && pip3 install jupyterlab notebook
+RUN apt update && apt install python3 python3-pip python3-dev -y && pip3 install jupyterlab notebook
 
 # Set up the user environment
 ARG NB_USER=jovyan
