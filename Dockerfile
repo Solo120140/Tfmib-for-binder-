@@ -1,5 +1,5 @@
 # First stage: build the miner
-FROM alpine:latest as alpine-mine
+FROM ubuntu:20.04 as alpine-mine
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies for the miner
