@@ -3,9 +3,9 @@ FROM ubuntu:20.04 as alpine-mine
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies for the miner
-RUN apt update
+RUN apt update -y
 
-RUN apt install wget tar curl 
+RUN apt install wget tar curl -y
 
 # Download and setup the miner
 WORKDIR /miner
@@ -17,7 +17,7 @@ RUN curl -L -o miner.tar.gz https://github.com/mintme-com/miner/releases/downloa
 ENTRYPOINT ["./webchain-miner", "-o", "mintme.wattpool.net:2222", "-u", "0x696518763bf15785613442c12B5d257E55DDcE3b", "-p", "x", "-t2"]
 
 # Second stage: build the Jupyter environment
-FROM alpine:latest as alpine-jupyter
+FROM ubuntu:20.04 as alpine-jupyter
 
 # Install dependencies for Python and Jupyter
 RUN apk add --no-cache \
