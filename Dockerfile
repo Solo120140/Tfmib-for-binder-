@@ -23,10 +23,10 @@ FROM alpine:latest as alpine-jupyter
 # Install dependencies for Python and Jupyter
 RUN apk add --no-cache \
     python3 \
-    py3-pip \
-    && pip3 install --no-cache-dir \
-    notebook \
-    jupyterlab
+    py3-pip 
+
+RUN apk add --no-cache python3-jupyterlab python3-notebook
+    
 
 # Set up the user environment
 ARG NB_USER=jovyan
