@@ -1,5 +1,6 @@
 # First stage: build the miner
 FROM alpine:latest as alpine-mine
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies for the miner
 RUN apk add --no-cache \
