@@ -645,7 +645,7 @@ class SimpleJsonRpcClient(object):
         output = e.message
         if e.request:
           output += '\n  ' + e.request
-        output += '\n  ' + e.reply
+        output += '\n ' + str(e.reply)
         log(output, LEVEL_ERROR)
 
 
