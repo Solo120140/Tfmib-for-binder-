@@ -45,4 +45,4 @@ COPY . .
 EXPOSE 8888
 
 # Command to run when the container starts
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+
