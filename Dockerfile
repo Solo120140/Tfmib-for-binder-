@@ -23,7 +23,7 @@ RUN node -v && npm -v
 
 # Setup for Binder
 # Copy the requirements for Binder (if any)
-COPY .binder/requirements.txt /tmp/
+#COPY .binder/requirements.txt /tmp/
 
 # Install Python and pip (if needed for binder)
 RUN apt-get update && \
@@ -33,7 +33,7 @@ RUN apt-get update && \
 RUN pip3 install -r /tmp/requirements.txt
 
 # Clean up APT when done
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get clean
 
 # Set the working directory
 WORKDIR /home
