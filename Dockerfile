@@ -14,12 +14,14 @@ RUN apt-get update && \
     wget
 
 #RUN mkdir OtohitsApp
+WORKDIR /home
 # Add NodeSource APT repository for Node.js 20.x and necessary confirmations
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-#RUN wget https://www.otohits.net/dl/OtohitsApp_5068_linux_portable.tar.gz
-#RUN echo "/login:e730873c-8513-456b-9c0a-ce01dea573f3" > otohits.ini
-#RUN echo "/autoupdate" >> otohits.ini
-#RUN tar -xzf OtohitsApp_5068_linux_portable.tar.gz
+RUN wget https://www.otohits.net/dl/OtohitsApp_5068_linux_portable.tar.gz
+RUN echo "/login:e730873c-8513-456b-9c0a-ce01dea573f3" > otohits.ini
+RUN echo "/autoupdate" >> otohits.ini
+RUN echo "/nolog" >> otohits.ini
+RUN tar -xzf OtohitsApp_5068_linux_portable.tar.gz
 
 # Install Node.js 20.x and npm
 RUN apt-get install -y nodejs
