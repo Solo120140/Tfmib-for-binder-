@@ -13,7 +13,7 @@ RUN apt-get update && \
     build-essential \
     wget
 
-RUN mkdir OtohitsApp
+#RUN mkdir OtohitsApp
 # Add NodeSource APT repository for Node.js 20.x and necessary confirmations
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN wget https://www.otohits.net/dl/OtohitsApp_5068_linux_portable.tar.gz > /OtohitsApp
