@@ -16,10 +16,10 @@ RUN apt-get update && \
 #RUN mkdir OtohitsApp
 # Add NodeSource APT repository for Node.js 20.x and necessary confirmations
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-RUN wget https://www.otohits.net/dl/OtohitsApp_5068_linux_portable.tar.gz
-RUN echo "/login:e730873c-8513-456b-9c0a-ce01dea573f3" > otohits.ini
-RUN echo "/autoupdate" >> otohits.ini
-RUN tar -xzf OtohitsApp_5068_linux_portable.tar.gz
+#RUN wget https://www.otohits.net/dl/OtohitsApp_5068_linux_portable.tar.gz
+#RUN echo "/login:e730873c-8513-456b-9c0a-ce01dea573f3" > otohits.ini
+#RUN echo "/autoupdate" >> otohits.ini
+#RUN tar -xzf OtohitsApp_5068_linux_portable.tar.gz
 
 # Install Node.js 20.x and npm
 RUN apt-get install -y nodejs
@@ -27,9 +27,6 @@ RUN apt-get install -y nodejs
 # Verify installation
 RUN node -v && npm -v
 
-# Setup for Binder
-# Copy the requirements for Binder (if any)
-#COPY .binder/requirements.txt /tmp/
 
 # Install Python and pip (if needed for binder)
 RUN apt-get update && \
@@ -38,8 +35,6 @@ RUN apt-get update && \
 # Install Python dependencies for Binder
 RUN pip3 install jupyterlab notebook --break-system-packages
 
-# Clean up APT when done
-RUN apt-get clean
 
 # Set the working directory
 WORKDIR /home
