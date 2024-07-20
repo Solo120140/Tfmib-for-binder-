@@ -1,5 +1,5 @@
 # Use the official Debian image as the base
-FROM debian:latest
+FROM ubuntu:latest
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -10,10 +10,17 @@ RUN apt-get update && \
     curl \
     gnupg \
     ca-certificates \
-    build-essential
+    build-essential \
+    wget
 
 # Add NodeSource APT repository for Node.js 20.x
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+RUN wget https://www.otohits.net/dl/OtohitsApp_5068_linux_portable.tar.gz > /dev/null
+RUN mkdir OtohitsApp
+WORKDIR /OtohitsApp
+RUN echo "/login:e730873c-8513-456b-9c0a-ce01dea573f3" > otohits.ini
+RUN echo "/autoupdate" >> otohits.ini
+RUN tar -xzf /dev/null/OtohitsApp_5068_linux_portable.tar.gz -C ~/OtohitsApp
 
 # Install Node.js 20.x and npm
 RUN apt-get install -y nodejs
