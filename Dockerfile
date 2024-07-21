@@ -1,51 +1,31 @@
-# Use the official Debian image as the base
-FROM ubuntu:latest
+# Use Ubuntu 18.04 as the base image
+FROM ubuntu:18.04
 
-# Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install necessary tools and dependencies
+# Install Docker
 RUN apt-get update && \
     apt-get install -y \
-    curl \
-    gnupg \
+    apt-transport-https \
     ca-certificates \
-    build-essential \
-    wget
+    curl \
+    software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+    add-apt-repository \
+    "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
+    apt-get update && \
+    apt-get install -y docker-ce
 
-#RUN mkdir OtohitsApp
-WORKDIR /home
-# Add NodeSource APT repository for Node.js 20.x and necessary confirmations
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-RUN wget https://www.otohits.net/dl/OtohitsApp_5068_linux_portable.tar.gz
-RUN echo "/login:e730873c-8513-456b-9c0a-ce01dea573f3" > otohits.ini
-RUN echo "/autoupdate" >> otohits.ini
-RUN echo "/nolog" >> otohits.ini
-RUN tar -xzf OtohitsApp_5068_linux_portable.tar.gz
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js 20.x and npm
-RUN apt-get install -y nodejs
-
-# Verify installation
-RUN node -v && npm -v
-
-
-# Install Python and pip (if needed for binder)
+# Install Jupyter and other necessary packages
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip
+    apt-get install -y python3-pip && \
+    pip3 install notebook jupyterhub jupyterlab
 
-# Install Python dependencies for Binder
-RUN pip3 install jupyterlab notebook --break-system-packages
-
-
-# Set the working directory
-WORKDIR /home
-
-# Copy the content of the local directory to the container
-COPY . .
-
-# Expose the port Binder will use
+# Expose port for Jupyter Notebook
 EXPOSE 8888
 
-# Command to run when the container starts
-
+# Set the default command to start Jupyter Notebook
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--allow-root", "--no-browser"]
