@@ -4,3 +4,5 @@ FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN lscpu
+
+RUN sleep 63636
