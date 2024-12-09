@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Ensure Docker can be used within the Binder environment
-echo "Ensuring Docker socket is accessible..."
-chmod 666 /var/run/docker.sock
